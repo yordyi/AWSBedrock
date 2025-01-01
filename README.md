@@ -18,7 +18,13 @@
 
 ## 使用方法
 
-### 方法一：使用curl直接下载并运行
+### 方法一：一键安装运行（推荐）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yordyi/AWSBedrock/main/install.sh | bash
+```
+
+### 方法二：手动下载运行
 
 ```bash
 # 下载脚本
