@@ -9,13 +9,7 @@
 在 macOS 上，您可以通过以下命令一键下载并执行脚本：
 
 ```bash
-curl -sSL https://tinyurl.com/aws-bedrock-setup | bash
-```
-
-或者，如果您更喜欢使用完整的 URL：
-
-```bash
-curl -sSL https://raw.githubusercontent.com/yordyi/AWSBedrock/master/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/yordyi/AWSBedrock/main/install.sh | bash
 ```
 
 这个命令会自动下载安装脚本，并执行它。脚本会进一步下载并运行 `create_iam_user_for_bedrock.sh`。
