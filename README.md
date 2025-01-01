@@ -9,6 +9,12 @@
 在 macOS 上，您可以通过以下命令一键下载并执行脚本：
 
 ```bash
+curl -sSL https://tinyurl.com/aws-bedrock-setup | bash
+```
+
+或者，如果您更喜欢使用完整的 URL：
+
+```bash
 curl -sSL https://raw.githubusercontent.com/yordyi/AWSBedrock/master/install.sh | bash
 ```
 

@@ -24,7 +24,9 @@ AWS_REGION="us-east-1"  # 默认使用us-east-1，如果需要改，请自行修
 #######################################
 # 1. 定义脚本中将要创建的IAM用户信息
 #######################################
-IAM_USER_NAME="bedrock-invoke-user"  # 新建的IAM用户名
+# 生成随机且有规律的用户名
+RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 6 | head -n 1)
+IAM_USER_NAME="bedrock-user-${RANDOM_SUFFIX}"  # 新建的IAM用户名
 BEDROCK_POLICY_ARN="arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
 
 #######################################
