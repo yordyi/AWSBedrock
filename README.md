@@ -4,37 +4,43 @@
 
 ## 使用方法
 
-在 macOS 上，您可以通过以下步骤一键执行此脚本：
+### 方法一：使用 curl 一键安装和执行（推荐）
+
+在 macOS 上，您可以通过以下命令一键下载并执行脚本：
+
+```bash
+curl -sSL https://raw.githubusercontent.com/yordyi/AWSBedrock/master/install.sh | bash
+```
+
+这个命令会自动下载安装脚本，并执行它。脚本会进一步下载并运行 `create_iam_user_for_bedrock.sh`。
+
+### 方法二：手动克隆仓库并执行
+
+如果您更喜欢手动操作，可以按照以下步骤执行：
 
 1. 打开终端。
 
-2. 确保您已经安装了 Git。如果没有安装，您可以通过 Homebrew 安装：
-   ```
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   brew install git
-   ```
-
-3. 克隆此仓库：
+2. 克隆此仓库：
    ```
    git clone https://github.com/yordyi/AWSBedrock.git
    ```
 
-4. 进入项目目录：
+3. 进入项目目录：
    ```
    cd AWSBedrock
    ```
 
-5. 给脚本添加执行权限：
+4. 给脚本添加执行权限：
    ```
    chmod +x create_iam_user_for_bedrock.sh
    ```
 
-6. 执行脚本：
+5. 执行脚本：
    ```
    ./create_iam_user_for_bedrock.sh
    ```
 
-7. 按照提示输入您的 AWS Access Key ID 和 Secret Access Key。
+无论您选择哪种方法，都需要按照提示输入您的 AWS Access Key ID 和 Secret Access Key。
 
 脚本将自动创建一个新的 IAM 用户，并为其分配 Bedrock 访问权限。完成后，脚本会显示新用户的 Access Key ID 和 Secret Access Key。请务必保存这些信息，因为 Secret Access Key 只会显示一次。
 
