@@ -19,13 +19,14 @@ read -s -p "Enter your AWS Secret Access Key: " ROOT_AWS_SECRET_ACCESS_KEY
 echo  # 换行
 
 # 你也可以在此处可选地让用户输入想要操作的AWS Region：
-AWS_REGION="us-east-1"  # 默认使用us-east-1，如果需要改，请自行修改
+read -p "Enter your AWS Region (default is us-east-1): " AWS_REGION
+AWS_REGION=${AWS_REGION:-us-east-1}
 
 #######################################
 # 1. 定义脚本中将要创建的IAM用户信息
 #######################################
 # 生成随机且有规律的用户名
-RANDOM_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 6 | head -n 1)
+RANDOM_SUFFIX=$(LC_ALL=C tr -dc 'a-z0-9' < /dev/urandom | fold -w 6 | head -n 1)
 IAM_USER_NAME="bedrock-user-${RANDOM_SUFFIX}"  # 新建的IAM用户名
 BEDROCK_POLICY_ARN="arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
 
@@ -74,8 +75,14 @@ echo "==> 为用户 $IAM_USER_NAME 创建访问密钥..."
 CREATED_KEYS_JSON=$(aws iam create-access-key --user-name "$IAM_USER_NAME" --profile "$TEMP_PROFILE_NAME" --region "$AWS_REGION")
 
 # 如需用到jq来解析JSON，请确保已安装jq。若没有则需注释掉或换其他解析方式
-AWS_ACCESS_KEY_ID=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.AccessKeyId')
-AWS_SECRET_ACCESS_KEY=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.SecretAccessKey')
+if command -v jq &> /dev/null; then
+    AWS_ACCESS_KEY_ID=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.AccessKeyId')
+    AWS_SECRET_ACCESS_KEY=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.SecretAccessKey')
+else
+    echo "警告：未检测到jq命令。将显示原始JSON输出。"
+    echo "$CREATED_KEYS_JSON"
+    exit 1
+fi
 
 if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
     echo "创建访问密钥失败。请检查您的AWS凭证是否具有创建访问密钥的权限。"
