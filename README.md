@@ -18,13 +18,13 @@
 
 ## 使用方法
 
-### 方法一：一键安装运行（推荐）
+### 方法一：直接运行（推荐）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yordyi/AWSBedrock/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yordyi/AWSBedrock/main/create_iam_user_for_bedrock.sh | bash
 ```
 
-### 方法二：手动下载运行
+### 方法二：下载后运行
 
 ```bash
 # 下载脚本
