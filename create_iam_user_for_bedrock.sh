@@ -40,7 +40,17 @@ aws configure set aws_secret_access_key "$ROOT_AWS_SECRET_ACCESS_KEY" --profile 
 aws configure set region $AWS_REGION --profile $TEMP_PROFILE_NAME
 
 #######################################
-# 3. 创建新IAM用户
+# 3. 验证AWS凭证
+#######################################
+echo "==> 验证AWS凭证"
+if ! aws sts get-caller-identity --profile "$TEMP_PROFILE_NAME" &> /dev/null; then
+    echo "错误：AWS凭证无效或没有足够的权限。请检查您的Access Key和Secret Key，确保它们是正确的且具有足够的权限。"
+    exit 1
+fi
+echo "AWS凭证验证成功。"
+
+#######################################
+# 4. 创建新IAM用户
 #######################################
 echo "==> 创建IAM用户: $IAM_USER_NAME"
 aws iam create-user \

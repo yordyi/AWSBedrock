@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 下载脚本
-curl -O https://raw.githubusercontent.com/yordyi/AWSBedrock/master/create_iam_user_for_bedrock.sh
+curl -O https://raw.githubusercontent.com/yordyi/AWSBedrock/main/create_iam_user_for_bedrock.sh
 
 # 给脚本添加执行权限
 chmod +x create_iam_user_for_bedrock.sh
