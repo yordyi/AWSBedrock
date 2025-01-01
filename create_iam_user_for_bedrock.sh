@@ -53,39 +53,37 @@ echo "AWS凭证验证成功。"
 # 4. 创建新IAM用户
 #######################################
 echo "==> 创建IAM用户: $IAM_USER_NAME"
-aws iam create-user \
-  --user-name "$IAM_USER_NAME" \
-  --profile "$TEMP_PROFILE_NAME" \
-  --region "$AWS_REGION" || {
-    echo "创建用户失败，可能已存在同名用户。请检查后重试。"
+if ! aws iam create-user --user-name "$IAM_USER_NAME" --profile "$TEMP_PROFILE_NAME" --region "$AWS_REGION"; then
+    echo "创建用户失败。请检查您的AWS凭证是否具有创建IAM用户的权限。"
     exit 1
-  }
+fi
 
 #######################################
-# 4. 附加AmazonBedrockFullAccess策略
+# 5. 附加AmazonBedrockFullAccess策略
 #######################################
 echo "==> 为用户 $IAM_USER_NAME 附加策略: $BEDROCK_POLICY_ARN"
-aws iam attach-user-policy \
-  --user-name "$IAM_USER_NAME" \
-  --policy-arn "$BEDROCK_POLICY_ARN" \
-  --profile "$TEMP_PROFILE_NAME" \
-  --region "$AWS_REGION"
+if ! aws iam attach-user-policy --user-name "$IAM_USER_NAME" --policy-arn "$BEDROCK_POLICY_ARN" --profile "$TEMP_PROFILE_NAME" --region "$AWS_REGION"; then
+    echo "附加策略失败。请检查您的AWS凭证是否具有附加IAM策略的权限。"
+    exit 1
+fi
 
 #######################################
-# 5. 创建访问密钥 (Access Key / Secret Key) 并解析输出
+# 6. 创建访问密钥 (Access Key / Secret Key) 并解析输出
 #######################################
 echo "==> 为用户 $IAM_USER_NAME 创建访问密钥..."
-CREATED_KEYS_JSON=$(aws iam create-access-key \
-  --user-name "$IAM_USER_NAME" \
-  --profile "$TEMP_PROFILE_NAME" \
-  --region "$AWS_REGION")
+CREATED_KEYS_JSON=$(aws iam create-access-key --user-name "$IAM_USER_NAME" --profile "$TEMP_PROFILE_NAME" --region "$AWS_REGION")
 
 # 如需用到jq来解析JSON，请确保已安装jq。若没有则需注释掉或换其他解析方式
 AWS_ACCESS_KEY_ID=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.AccessKeyId')
 AWS_SECRET_ACCESS_KEY=$(echo "$CREATED_KEYS_JSON" | jq -r '.AccessKey.SecretAccessKey')
 
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+    echo "创建访问密钥失败。请检查您的AWS凭证是否具有创建访问密钥的权限。"
+    exit 1
+fi
+
 #######################################
-# 6. 输出结果
+# 7. 输出结果
 #######################################
 echo
 echo "================== 创建完成 =================="
@@ -99,9 +97,8 @@ echo "注意：Secret Access Key 只在此时显示一次，请妥善保存！"
 echo "================================================"
 
 #######################################
-# 7. 可选：清理临时Profile（如果你不想保留）
+# 8. 清理临时Profile
 #######################################
-# 如果你想在脚本结束后删除上述临时Profile的配置，可以执行：
-# aws configure set aws_access_key_id "" --profile $TEMP_PROFILE_NAME
-# aws configure set aws_secret_access_key "" --profile $TEMP_PROFILE_NAME
-# echo "已清空临时Profile: $TEMP_PROFILE_NAME (可选择保留也可删除)"
+aws configure set aws_access_key_id "" --profile $TEMP_PROFILE_NAME
+aws configure set aws_secret_access_key "" --profile $TEMP_PROFILE_NAME
+echo "已清空临时Profile: $TEMP_PROFILE_NAME"
