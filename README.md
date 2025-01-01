@@ -18,6 +18,21 @@
 
 ## 使用方法
 
+### 方法一：使用curl直接下载并运行
+
+```bash
+# 下载脚本
+curl -O https://raw.githubusercontent.com/yordyi/AWSBedrock/main/create_iam_user_for_bedrock.sh
+
+# 添加执行权限
+chmod +x create_iam_user_for_bedrock.sh
+
+# 运行脚本
+./create_iam_user_for_bedrock.sh
+```
+
+### 方法二：克隆仓库
+
 1. 克隆仓库：
 ```bash
 git clone https://github.com/yordyi/AWSBedrock.git
